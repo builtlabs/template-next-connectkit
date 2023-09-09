@@ -1,7 +1,11 @@
-import Image from "next/image";
+"use client"
+
+import { ConnectKitButton } from "connectkit"
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">HELLO WORLD</main>
-  );
+    <main className="flex min-h-screen flex-col items-center justify-center">
+      <ConnectKitButton />
+    </main>
+  )
 }
