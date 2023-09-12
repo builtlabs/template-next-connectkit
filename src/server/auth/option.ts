@@ -1,3 +1,4 @@
+import { env } from "@/env.mjs"
 import { prisma } from "@/server/db"
 import { getServerSession as getServerSessionInternal, type NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -29,9 +30,11 @@ export const authOptions: NextAuthOptions = {
 
           const siwe = new SiweMessage(JSON.parse(credentials.message))
           const nonce = await getCsrfToken({ req: { headers: req.headers } })
+          const nextAuthUrl = new URL(env.NEXTAUTH_URL)
 
           const result = await siwe.verify({
             signature: credentials.signature,
+            domain: nextAuthUrl.host,
             nonce,
           })
 
@@ -96,6 +99,7 @@ export const authOptions: NextAuthOptions = {
       return token
     },
   },
+  secret: env.NEXTAUTH_SECRET,
 }
 
 export async function getServerSession() {
