@@ -27,14 +27,14 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         try {
           if (!credentials) throw new Error("No credentials")
+          if (!req.headers) throw new Error("No headers")
 
           const siwe = new SiweMessage(JSON.parse(credentials.message))
           const nonce = await getCsrfToken({ req: { headers: req.headers } })
-          const nextAuthUrl = new URL(env.NEXTAUTH_URL)
 
           const result = await siwe.verify({
             signature: credentials.signature,
-            domain: nextAuthUrl.host,
+            domain: req.headers.host,
             nonce,
           })
 
